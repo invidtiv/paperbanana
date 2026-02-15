@@ -31,7 +31,7 @@ _API_KEY_HINTS = {
 
 def _validate_api_key(key_value: str | None, env_var_name: str) -> None:
     """Raise a helpful error if the required API key is missing."""
-    if key_value is None:
+    if key_value is None or not key_value.strip():
         hint = _API_KEY_HINTS.get(env_var_name, f"{env_var_name} is not set.")
         raise ValueError(hint)
 

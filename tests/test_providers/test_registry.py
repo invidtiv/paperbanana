@@ -65,6 +65,17 @@ def test_missing_openrouter_api_key_for_image_gen_raises_helpful_error():
         ProviderRegistry.create_image_gen(settings)
 
 
+def test_empty_api_key_raises_helpful_error():
+    """Test that empty or whitespace-only API key raises a helpful error."""
+    settings = Settings(vlm_provider="gemini", google_api_key="   ")
+    with pytest.raises(ValueError, match="GOOGLE_API_KEY not found") as exc_info:
+        ProviderRegistry.create_vlm(settings)
+    error_msg = str(exc_info.value)
+    assert "makersuite.google.com" in error_msg
+    assert "paperbanana setup" in error_msg
+    assert "export GOOGLE_API_KEY" in error_msg
+
+
 def test_unknown_vlm_provider_raises():
     """Test that unknown VLM provider raises ValueError."""
     settings = Settings(vlm_provider="nonexistent")
