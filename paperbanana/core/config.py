@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Literal, Optional
 
 import yaml
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
+
+OutputFormat = Literal["png", "jpeg", "webp"]
 
 
 class VLMConfig(BaseSettings):
@@ -44,6 +46,7 @@ class OutputConfig(BaseSettings):
     """Output configuration."""
 
     dir: str = "outputs"
+    format: str = "png"
     save_iterations: bool = True
     save_prompts: bool = True
     save_metadata: bool = True
@@ -69,6 +72,7 @@ class Settings(BaseSettings):
 
     # Output settings
     output_dir: str = "outputs"
+    output_format: OutputFormat = "png"
     save_iterations: bool = True
 
     # API Keys (loaded from environment)
@@ -84,6 +88,17 @@ class Settings(BaseSettings):
         "extra": "ignore",
         "populate_by_name": True,
     }
+
+    @field_validator("output_format", mode="before")
+    @classmethod
+    def validate_output_format(cls, v: Any) -> str:
+        """Validate output_format is png, jpeg, or webp (case-insensitive)."""
+        if v is None:
+            return "png"
+        v = str(v).lower()
+        if v not in ("png", "jpeg", "webp"):
+            raise ValueError(f"output_format must be png, jpeg, or webp. Got: {v}")
+        return v
 
     @classmethod
     def from_yaml(cls, config_path: str | Path, **overrides: Any) -> Settings:
@@ -114,6 +129,7 @@ def _flatten_yaml(config: dict, prefix: str = "") -> dict:
         "reference.path": "reference_set_path",
         "reference.guidelines_path": "guidelines_path",
         "output.dir": "output_dir",
+        "output.format": "output_format",
         "output.save_iterations": "save_iterations",
     }
 
