@@ -82,7 +82,12 @@ class Settings(BaseSettings):
     # SSL
     skip_ssl_verification: bool = Field(default=False, alias="SKIP_SSL_VERIFICATION")
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "extra": "ignore",
+        "populate_by_name": True,
+    }
 
     @field_validator("output_format", mode="before")
     @classmethod

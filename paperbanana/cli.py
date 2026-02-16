@@ -13,6 +13,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.prompt import Prompt
 
 from paperbanana.core.config import Settings
+from paperbanana.core.logging import configure_logging
 from paperbanana.core.types import DiagramType, GenerationInput
 
 app = typer.Typer(
@@ -48,12 +49,16 @@ def generate(
         help="Output image format (png, jpeg, or webp)",
     ),
     config: Optional[str] = typer.Option(None, "--config", help="Path to config YAML file"),
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Show detailed agent progress and timing"
+    ),
 ):
     """Generate a methodology diagram from a text description."""
     if format not in ("png", "jpeg", "webp"):
         console.print(f"[red]Error: Format must be png, jpeg, or webp. Got: {format}[/red]")
         raise typer.Exit(1)
 
+    configure_logging(verbose=verbose)
     # Load source text
     input_path = Path(input)
     if not input_path.exists():
@@ -142,6 +147,12 @@ def plot(
         console.print(f"[red]Error: Format must be png, jpeg, or webp. Got: {format}[/red]")
         raise typer.Exit(1)
 
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Show detailed agent progress and timing"
+    ),
+):
+    """Generate a statistical plot from data."""
+    configure_logging(verbose=verbose)
     data_path = Path(data)
     if not data_path.exists():
         console.print(f"[red]Error: Data file not found: {data}[/red]")
@@ -250,8 +261,12 @@ def evaluate(
     vlm_provider: str = typer.Option(
         "gemini", "--vlm-provider", help="VLM provider for evaluation"
     ),
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Show detailed agent progress and timing"
+    ),
 ):
     """Evaluate a generated diagram vs human reference (comparative)."""
+    configure_logging(verbose=verbose)
     from paperbanana.evaluation.judge import VLMJudge
 
     generated_path = Path(generated)
