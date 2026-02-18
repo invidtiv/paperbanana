@@ -3,12 +3,12 @@
 
 # Provider settings
 vlm:
-  provider: openai
-  model: gpt-5.2
+  provider: gemini
+  model: gemini-2.0-flash
 
 image:
-  provider: openai_imagen
-  model: gpt-image-1.5
+  provider: google_imagen
+  model: gemini-3-pro-image-preview
 
 # Pipeline settings
 pipeline:

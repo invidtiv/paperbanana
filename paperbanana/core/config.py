@@ -15,15 +15,15 @@ OutputFormat = Literal["png", "jpeg", "webp"]
 class VLMConfig(BaseSettings):
     """VLM provider configuration."""
 
-    provider: str = "openai"
-    model: str = "gpt-5.2"
+    provider: str = "gemini"
+    model: str = "gemini-2.0-flash"
 
 
 class ImageConfig(BaseSettings):
     """Image generation provider configuration."""
 
-    provider: str = "openai_imagen"
-    model: str = "gpt-image-1.5"
+    provider: str = "google_imagen"
+    model: str = "gemini-3-pro-image-preview"
 
 
 class PipelineConfig(BaseSettings):
@@ -56,10 +56,10 @@ class Settings(BaseSettings):
     """Main PaperBanana settings, loaded from env vars and config files."""
 
     # Provider settings
-    vlm_provider: str = "openai"
-    vlm_model: str = "gpt-5.2"
-    image_provider: str = "openai_imagen"
-    image_model: str = "gpt-image-1.5"
+    vlm_provider: str = "gemini"
+    vlm_model: str = "gemini-2.0-flash"
+    image_provider: str = "google_imagen"
+    image_model: str = "gemini-3-pro-image-preview"
 
     # Pipeline settings
     num_retrieval_examples: int = 10
